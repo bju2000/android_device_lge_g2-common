@@ -60,6 +60,8 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
 	frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
 	frameworks/native/data/etc/android.hardware.sensor.barometer.xml:system/etc/permissions/android.hardware.sensor.barometer.xml \
+	frameworks/native/data/etc/android.hardware.sensor.stepcounter.xml:system/etc/permissions/android.hardware.sensor.stepcounter.xml \
+	frameworks/native/data/etc/android.hardware.sensor.stepdetector.xml:system/etc/permissions/android.hardware.sensor.stepdetector.xml \
 	frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
 	frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
 	frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
@@ -84,8 +86,6 @@ PRODUCT_PACKAGES += \
 
 # NFC packages
 PRODUCT_PACKAGES += \
-    nfc_nci.g2 \
-    NfcNci \
     Tag \
     com.android.nfc_extras
 
@@ -106,14 +106,17 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
         ro.sf.lcd_density=480 \
-	ro.opengles.version=196608
+	ro.opengles.version=196608 \
+	ro.loki_enabled=1
 
 # Audio Configuration
 PRODUCT_PROPERTY_OVERRIDES += \
-	persist.audio.handset.mic=digital \
-	persist.audio.fluence.mode=endfire \
-	af.resampler.quality=4
-
+	persist.audio.fluence.voicecall=true \
+	persist.audio.dualmic.config=endfire \
+	af.resampler.quality=4 \
+	audio.offload.buffer.size.kb=32 \
+	audio.offload.gapless.enabled=false \
+	av.offload.enable=true
 
 # Do not power down SIM card when modem is sent to Low Power Mode.
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -200,7 +203,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
         debug.egl.recordable.rgba8888=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
-	ro.qc.sensors.wl_dis=true
+	ro.qualcomm.sensors.qmd=true \
+	ro.qc.sdk.sensors.gestures=true \
+	ro.qualcomm.sensors.pedometer=true \
+	ro.qualcomm.sensors.pam=true \
+	ro.qualcomm.sensors.scrn_ortn=true \
+	debug.qualcomm.sns.hal=1 \
+	debug.qualcomm.sns.daemon=1 \
+	debug.qualcomm.sns.libsensor1=e
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.sys.usb.config=mtp
@@ -214,8 +224,8 @@ PRODUCT_COPY_FILES += \
 # This hw ships locked, work around it with loki
 PRODUCT_PACKAGES += \
         loki.sh \
-        loki_patch \
-        loki_flash
+        loki_tool_static_g2 \
+        recovery-transform.sh
 
 $(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
 
@@ -234,6 +244,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.hwui.text_large_cache_width=2048 \
     ro.hwui.text_large_cache_height=1024
 
+PRODUCT_PROPERTY_OVERRIDES += \
+        ro.vendor.extension_library=/vendor/lib/libqc-opt.so
 
 # Disregard the firmware, go straight for the confs...
 #$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4335/device-bcm.mk)

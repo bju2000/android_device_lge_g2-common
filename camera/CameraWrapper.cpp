@@ -29,6 +29,7 @@
 
 #include <utils/threads.h>
 #include <utils/String8.h>
+#include <utils/Errors.h>
 #include <hardware/hardware.h>
 #include <hardware/camera.h>
 #include <camera/Camera.h>
@@ -75,6 +76,10 @@ typedef struct wrapper_camera_device {
     __wrapper_dev->vendor->ops->func(__wrapper_dev->vendor, ##__VA_ARGS__); \
 })
 
+static bool flipZsl = false;
+static bool zslState = false;
+static bool previewRunning = false;
+
 #define CAMERA_ID(device) (((wrapper_camera_device_t *)(device))->id)
 
 static int check_vendor_module()
@@ -117,6 +122,13 @@ static char * camera_fixup_getparams(int id, const char * settings)
         free(manipBuf);
     }
 
+    /* LIE! The camera will set 3 snaps when doing HDR, and only return one. This hangs apps
+     * that wait for the rest to come in. Make sure we never return multiple snaps unless
+     * doing ZSL */
+    if (!videoMode && (!params.get("zsl") || strncmp(params.get("zsl"),"on", 2))) {
+        params.set("num-snaps-per-shutter", "1");
+    }
+
     ALOGV("%s: fixed parameters:", __func__);
     //params.dump();
 
@@ -147,6 +159,17 @@ char * camera_fixup_setparams(int id, const char * settings)
     } else {
         params.set("hdr-mode", "0");
     }
+
+    if (!strcmp(params.get("zsl"), "on")) {
+        if (previewRunning && !zslState) { flipZsl = true; }
+        zslState = true;
+        params.set("camera-mode", "1");
+    } else {
+        if (previewRunning && zslState) { flipZsl = true; }
+        zslState = false;
+        params.set("camera-mode", "0");
+    }
+
 
     ALOGV("%s: fixed parameters:", __func__);
     //params.dump();
@@ -223,13 +246,16 @@ int camera_msg_type_enabled(struct camera_device * device, int32_t msg_type)
 
 int camera_start_preview(struct camera_device * device)
 {
+    int rc = 0;
     ALOGV("%s", __FUNCTION__);
     ALOGV("%s->%08X->%08X", __FUNCTION__, (uintptr_t)device, (uintptr_t)(((wrapper_camera_device_t*)device)->vendor));
 
     if (!device)
         return -EINVAL;
 
-    return VENDOR_CALL(device, start_preview);
+    rc = VENDOR_CALL(device, start_preview);
+    previewRunning = (rc == android::NO_ERROR);
+    return rc;
 }
 
 void camera_stop_preview(struct camera_device * device)
@@ -240,6 +266,7 @@ void camera_stop_preview(struct camera_device * device)
     if (!device)
         return;
 
+    previewRunning = false;
     VENDOR_CALL(device, stop_preview);
 }
 
@@ -375,7 +402,14 @@ int camera_set_parameters(struct camera_device * device, const char *params)
     __android_log_write(ANDROID_LOG_VERBOSE, LOG_TAG, tmp);
 #endif
 
+    if (flipZsl) {
+        camera_stop_preview(device);
+    }
     int ret = VENDOR_CALL(device, set_parameters, tmp);
+    if (flipZsl) {
+        camera_start_preview(device);
+        flipZsl = false;
+    }
     return ret;
 }
 

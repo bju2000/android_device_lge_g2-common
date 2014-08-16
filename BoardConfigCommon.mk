@@ -35,8 +35,6 @@ TARGET_KRAIT_BIONIC_PLDSIZE := 64
 TARGET_NO_RADIOIMAGE := true
 TARGET_NO_BOOTLOADER := true
 
-TARGET_SPECIFIC_HEADER_PATH := device/lge/g2-common/include
-
 # Kernel information
 BOARD_KERNEL_BASE     := 0x00000000
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.hardware=g2 user_debug=31 msm_rtb.filter=0x0
@@ -48,10 +46,8 @@ BOARD_CUSTOM_BOOTIMG_MK := device/lge/g2-common/releasetools/mkbootimg.mk
 TARGET_KERNEL_SOURCE := kernel/lge/msm8974
 
 BOARD_USES_ALSA_AUDIO:= true
-BOARD_USES_FLUENCE_INCALL := true
-BOARD_USES_SEPERATED_AUDIO_INPUT := true
-BOARD_USES_SEPERATED_VOICE_SPEAKER := true
-BOARD_USES_SEPERATED_VOICE_SPEAKER_MIC := true
+AUDIO_FEATURE_DEEP_BUFFER_PRIMARY := true
+AUDIO_FEATURE_DYNAMIC_VOLUME_MIXER := true
 
 TARGET_BOOTLOADER_BOARD_NAME := galbi
 TARGET_BOARD_PLATFORM := msm8974
@@ -70,8 +66,6 @@ WIFI_DRIVER_FW_PATH_AP      := "/system/etc/firmware/fw_bcmdhd_apsta.bin"
 BOARD_EGL_CFG := device/lge/g2-common/egl.cfg
 
 USE_OPENGL_RENDERER := true
-VSYNC_EVENT_PHASE_OFFSET_NS := 7500000
-SF_VSYNC_EVENT_PHASE_OFFSET_NS := 5000000
 TARGET_USES_ION := true
 TARGET_USES_OVERLAY := true
 TARGET_USES_C2D_COMPOSITION := true
@@ -146,4 +140,8 @@ MAX_EGL_CACHE_KEY_SIZE := 12*1024
 # binaries. Decrease the size if RAM or Flash Storage size is a limitation
 # of the device.
 MAX_EGL_CACHE_SIZE := 2048*1024
+
+# Surfaceflinger optimization for VD surfaces
+TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 

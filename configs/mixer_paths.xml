@@ -125,6 +125,7 @@
     <ctl name="EAR PA Gain" value="POS_6_DB" />
     <ctl name="SLIM RX2 MUX" value="ZERO" />
     <ctl name="SPK DRV Volume" value="7" />
+    <ctl name="SPK DAC Switch" value="0" />
     <ctl name="AIF1_CAP Mixer SLIM TX7" value="0" />
     <ctl name="AIF1_CAP Mixer SLIM TX8" value="0"/>
     <ctl name="CLASS_H_DSM MUX" value="ZERO" />
@@ -133,6 +134,13 @@
     <ctl name="SEC_AUX_PCM_RX Audio Mixer MultiMedia4" value="0" />
     <ctl name="AUX PCM SampleRate" value="rate_8000" />
     <ctl name="FM Radio" value="OFF" />
+    <ctl name="RX7 HPF cut off" value="MIN_3DB_150Hz" />
+
+    <!-- usb headset -->
+    <ctl name="AFE_PCM_RX Audio Mixer MultiMedia1" value="0" />
+    <ctl name="MultiMedia1 Mixer AFE_PCM_TX" value="0" />
+    <ctl name="AFE_PCM_RX Audio Mixer MultiMedia5" value="0" />
+    <!-- usb headset end -->
 
     <!-- These are audio route (FE to BE) specific mixer settings -->
     <path name="deep-buffer-playback">
@@ -152,6 +160,19 @@
         <ctl name="SEC_AUX_PCM_RX Audio Mixer MultiMedia1" value="1" />
     </path>
 
+    <path name="deep-buffer-playback afe-proxy">
+        <ctl name="AFE_PCM_RX Audio Mixer MultiMedia1" value="1" />
+    </path>
+
+    <path name="deep-buffer-playback usb-headphones">
+        <path name="deep-buffer-playback afe-proxy" />
+    </path>
+
+    <path name="deep-buffer-playback speaker-and-usb-headphones">
+        <path name="deep-buffer-playback usb-headphones" />
+        <path name="deep-buffer-playback" />
+    </path>
+
     <path name="low-latency-playback">
         <ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia5" value="1" />
     </path>
@@ -166,6 +187,19 @@
 
     <path name="low-latency-playback speaker-and-hdmi">
         <path name="low-latency-playback hdmi" />
+        <path name="low-latency-playback" />
+    </path>
+
+    <path name="low-latency-playback afe-proxy">
+        <ctl name="AFE_PCM_RX Audio Mixer MultiMedia5" value="1" />
+    </path>
+
+    <path name="low-latency-playback usb-headphones">
+        <path name="low-latency-playback afe-proxy" />
+    </path>
+
+    <path name="low-latency-playback speaker-and-usb-headphones">
+        <path name="low-latency-playback usb-headphones" />
         <path name="low-latency-playback" />
     </path>
 
@@ -190,8 +224,25 @@
         <path name="compress-offload-playback" />
     </path>
 
+    <path name="compress-offload-playback afe-proxy">
+        <ctl name="AFE_PCM_RX Audio Mixer MultiMedia4" value="1" />
+    </path>
+
+    <path name="compress-offload-playback usb-headphones">
+        <path name="compress-offload-playback afe-proxy" />
+    </path>
+
+    <path name="compress-offload-playback speaker-and-usb-headphones">
+        <path name="compress-offload-playback usb-headphones" />
+        <path name="compress-offload-playback" />
+    </path>
+
     <path name="audio-record">
         <ctl name="MultiMedia1 Mixer SLIM_0_TX" value="1" />
+    </path>
+
+    <path name="audio-record usb-headset-mic">
+        <ctl name="MultiMedia1 Mixer AFE_PCM_TX" value="1" />
     </path>
 
     <path name="audio-record bt-sco">
@@ -246,8 +297,9 @@
         <ctl name="SLIM RX1 MUX" value="AIF1_PB" />
         <ctl name="SLIM_0_RX Channels" value="One" />
         <ctl name="RX7 MIX1 INP1" value="RX1" />
-        <ctl name="RX7 Digital Volume" value="67" />
-        <ctl name="SPK DRV Volume" value="6" />
+        <ctl name="RX7 Digital Volume" value="64" />
+        <ctl name="SPK DRV Volume" value="7" />
+        <ctl name="SPK DAC Switch" value="1" />
     </path>
 
     <path name="speaker-mic">
@@ -299,14 +351,15 @@
 
     <path name="voice-speaker">
         <path name="speaker" />
-        <ctl name="SPK DRV Volume" value="8" />
         <ctl name="RX7 Digital Volume" value="67" />
     </path>
 
     <path name="voice-speaker-mic">
         <path name="adc5" />
-        <ctl name="ADC5 Volume" value="15" />
-        <ctl name="DEC2 Volume" value="70" />
+        <ctl name="SPK DRV Volume" value="7" />
+        <ctl name="ADC5 Volume" value="12" />
+        <ctl name="DEC2 Volume" value="65" />
+        <ctl name="SPK DAC Switch" value="1" />
     </path>
 
     <path name="voice-headphones">
@@ -332,13 +385,24 @@
         <ctl name="RX7 Digital Volume" value="60" />
     </path>
 
+    <path name="usb-headphones">
+    </path>
+
+    <path name="afe-proxy">
+    </path>
+
     <path name="hdmi">
+    </path>
+
+    <path name="speaker-and-usb-headphones">
+        <path name="speaker" />
+        <path name="usb-headphones" />
     </path>
 
     <path name="speaker-and-hdmi">
         <path name="speaker" />
         <path name="hdmi" />
-        <ctl name="SPK DRV Volume" value="7" />
+        <ctl name="SPK DRV Volume" value="6" />
     </path>
 
     <path name="voice-rec-mic">
@@ -361,6 +425,9 @@
     </path>
 
     <path name="bt-sco-mic">
+    </path>
+
+    <path name="usb-headset-mic">
     </path>
 
     <!-- Dual MIC devices -->

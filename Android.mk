@@ -1,4 +1,4 @@
-ifneq ($(filter d800 d801 d802 vs980 L01F LGL22,$(TARGET_DEVICE)),)
+ifneq ($(filter d800 d801 d802 L01F LGL22 ls980 vs980,$(TARGET_DEVICE)),)
 
 LOCAL_PATH := $(call my-dir)
 
