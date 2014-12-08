@@ -36,6 +36,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/configs/snd_soc_msm_Taiko:system/etc/snd_soc_msm/snd_soc_msm_Taiko \
     $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_ffmpeg.xml:system/etc/media_codecs_ffmpeg.xml \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_paths.xml
 
@@ -78,8 +81,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
 
 PRODUCT_PACKAGES += \
-    charger_res_images \
-    charger
+    libwpa_client \
+    hostapd \
+    dhcpcd.conf \
+    wpa_supplicant \
+    wpa_supplicant.conf
+
+PRODUCT_PACKAGES += \
+    charger_res_images
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -117,7 +126,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	persist.audio.fluence.voicecall=true \
 	persist.audio.dualmic.config=endfire \
-	af.resampler.quality=4 \
 	audio.offload.buffer.size.kb=32 \
 	audio.offload.gapless.enabled=false \
 	av.offload.enable=true
@@ -132,7 +140,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.ril_class=LgeLteRIL \
-	ro.telephony.ril.v3=qcomdsds
+	ro.telephony.ril.config=qcomdsds
 
 #Upto 3 layers can go through overlays
 PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
@@ -181,7 +189,7 @@ PRODUCT_PACKAGES += \
 	libloc_eng \
 	libloc_api_v02 \
 	libgps.utils \
-	gps.msm8974
+	gps.g2
 
 PRODUCT_PACKAGES += \
 	hwaddrs
@@ -231,7 +239,7 @@ PRODUCT_PACKAGES += \
         loki_tool_static_g2 \
         recovery-transform.sh
 
-$(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
 ## These values are still too low and cause cache corruption. Use the hammerhead's
 #$(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)

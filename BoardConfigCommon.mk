@@ -50,8 +50,6 @@ BOARD_CUSTOM_BOOTIMG_MK := device/lge/g2-common/releasetools/mkbootimg.mk
 TARGET_KERNEL_SOURCE := kernel/lge/msm8974
 
 BOARD_USES_ALSA_AUDIO:= true
-AUDIO_FEATURE_DEEP_BUFFER_PRIMARY := true
-AUDIO_FEATURE_DYNAMIC_VOLUME_MIXER := true
 
 TARGET_BOOTLOADER_BOARD_NAME := galbi
 TARGET_BOARD_PLATFORM := msm8974
@@ -76,9 +74,6 @@ TARGET_USES_C2D_COMPOSITION := true
 
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 
-#BOARD_USES_QCOM_HARDWARE := true
-COMMON_GLOBAL_CFLAGS += -DLG_CAMERA_HARDWARE -DLPA_DEFAULT_BUFFER_SIZE=512
-#-DQCOM_BSP -DQCOM_HARDWARE
 TARGET_DISPLAY_USE_RETIRE_FENCE := true
 
 # Camera
@@ -111,23 +106,18 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/lge/g2-common/bluetooth
 BOARD_BLUEDROID_VENDOR_CONF := device/lge/g2-common/bluetooth/vnd_g2.txt
 
 # GPS
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
 TARGET_NO_RPC := true
 
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
 BOARD_HARDWARE_CLASS := device/lge/g2-common/cmhw/
 
+# SELinux policies
+# qcom sepolicy
+include device/qcom/sepolicy/sepolicy.mk
+
 BOARD_SEPOLICY_DIRS += \
         device/lge/g2-common/sepolicy
-
-# The list below is order dependent
-BOARD_SEPOLICY_UNION := \
-       device.te \
-       app.te \
-       file_contexts
-
-BOARD_NFC_HAL_SUFFIX := g2
 
 BOARD_RIL_CLASS := ../../../device/lge/g2-common/ril/
 TARGET_RELEASETOOLS_EXTENSIONS := device/lge/g2-common/releasetools
@@ -149,3 +139,8 @@ MAX_EGL_CACHE_SIZE := 2048*1024
 TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 
+TARGET_USES_LOGD := false
+
+TARGET_SPECIFIC_HEADER_PATH := device/lge/g2-common/include
+
+BOARD_USES_LEGACY_MMAP := true
