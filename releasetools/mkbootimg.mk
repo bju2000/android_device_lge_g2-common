@@ -5,8 +5,10 @@ LOCAL_PATH := $(call my-dir)
 ## values.
 ifeq ($(TARGET_DEVICE),L01F)
 G2_DTS_TARGET ?= msm8974-g2-dcm
-else
+else ifeq ($(TARGET_DEVICE),lgl22)
 G2_DTS_TARGET ?= msm8974-g2-kddi
+else ifeq ($(TARGET_DEVICE),lgl23)
+G2_DTS_TARGET ?= msm8974-z-kddi
 endif
 
 
