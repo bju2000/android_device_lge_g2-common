@@ -19,6 +19,7 @@ endif
 ## Imported from the original makefile...
 KERNEL_CONFIG := $(KERNEL_OUT)/.config
 G2_DTS_NAMES := msm8974
+BUMP := $bump/bump.py
 
 G2_DTS_FILES = $(wildcard $(TOP)/$(TARGET_KERNEL_SOURCE)/arch/arm/boot/dts/$(G2_DTS_TARGET)/*.dts)
 G2_DTS_FILE = $(lastword $(subst /, ,$(1)))
@@ -62,4 +63,7 @@ $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_DTIMAGE_TARGET) \
 	@echo -e ${CL_CYN}"----- Making recovery image ------"${CL_RST}
 	$(hide) $(MKBOOTIMG) $(INTERNAL_RECOVERYIMAGE_ARGS) $(BOARD_MKBOOTIMG_ARGS) --dt $(INSTALLED_DTIMAGE_TARGET) --output $@
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
+ifeq ($(TARGET_REQUIRES_BUMP),true)
+	$(hide) $(BUMP) $@ $@
+endif
 	@echo -e ${CL_CYN}"Made recovery image: $@"${CL_RST}
