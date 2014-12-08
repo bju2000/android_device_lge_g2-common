@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 ## THIS IS A DEFAULT: YOU SHOULD OVERRIDE IT FROM THE DEVICE-SPECIFIC
 ## BoardConfig. Check the kernel's arch/arm/boot/dts/ path for possible
 ## values.
-ifeq ($(TARGET_DEVICE),L01F)
+ifeq ($(TARGET_DEVICE),l01f)
 G2_DTS_TARGET ?= msm8974-g2-dcm
 else ifeq ($(TARGET_DEVICE),lgl22)
 G2_DTS_TARGET ?= msm8974-g2-kddi
