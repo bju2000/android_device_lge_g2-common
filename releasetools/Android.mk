@@ -16,6 +16,8 @@
 
 LOCAL_PATH := $(call my-dir)
 
+ifeq ($(TARGET_REQUIRES_BUMP_BOOT),true)
+
 # build static binary
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := loki_flash.c loki_patch.c loki_find.c loki_unlok.c main.c
@@ -41,3 +43,5 @@ LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT)/etc
 LOCAL_SRC_FILES := loki-recovery.sh
 include $(BUILD_PREBUILT)
+
+endif
