@@ -16,7 +16,7 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_REQUIRES_BUMP_BOOT),true)
+ifeq ($(TARGET_REQUIRES_BUMP_BOOT),false)
 
 # build static binary
 include $(CLEAR_VARS)
