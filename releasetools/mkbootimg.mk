@@ -19,7 +19,7 @@ endif
 ## Imported from the original makefile...
 KERNEL_CONFIG := $(KERNEL_OUT)/.config
 G2_DTS_NAMES := msm8974
-BUMP := bump/bump.py
+BUMP := $(LOCAL_PATH)/bump/open_bump.py
 
 G2_DTS_FILES = $(wildcard $(TOP)/$(TARGET_KERNEL_SOURCE)/arch/arm/boot/dts/$(G2_DTS_TARGET)/*.dts)
 G2_DTS_FILE = $(lastword $(subst /, ,$(1)))
