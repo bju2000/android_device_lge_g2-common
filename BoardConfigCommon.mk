@@ -123,7 +123,11 @@ include device/qcom/sepolicy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += \
         device/lge/g2-common/sepolicy
 
+ifeq ($(TARGET_DEVICE),lgl22)
+BOARD_RIL_CLASS := ../../../device/lge/g2-common/ril_kdi/
+else
 BOARD_RIL_CLASS := ../../../device/lge/g2-common/ril/
+endif
 
 ifeq ($(TARGET_REQUIRES_BUMP_BOOT),true)
 TARGET_RELEASETOOLS_EXTENSIONS := device/lge/g2-common/bump/releasetools
